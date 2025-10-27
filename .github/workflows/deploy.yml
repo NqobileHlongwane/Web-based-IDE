@@ -33,6 +33,15 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_PORT }}
-          source: "./"          # local project folder
-          target: "/var/www/html" # path on server
-          rm: true              # remove files on server before copy
+          # Run deployment commands on the remote host. Replace or extend the
+          # commands below with the actual deploy steps you need (git pull,
+          # composer install, service restart, etc.).
+          script: |
+            set -e
+            echo "Starting deploy on $(hostname)"
+            mkdir -p /var/www/html
+            # adjust ownership if needed (may fail on some hosts)
+            chown -R www-data:www-data /var/www/html || true
+            # place a marker file to verify deployment succeeded
+            echo "Deployed by GitHub Actions on $(date)" > /var/www/html/DEPLOYED_BY
+            ls -la /var/www/html
