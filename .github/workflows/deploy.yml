@@ -1,6 +1,5 @@
-name: PHP Deployment
+name: Deploy
 
-# Trigger workflow on push to main branch
 on:
   push:
     branches:
@@ -9,40 +8,20 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Checkout the repository
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # Step 2: Setup PHP environment (optional, for testing)
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H your.server.com >> ~/.ssh/known_hosts
 
-      # Step 3: Install dependencies (if using Composer)
-      - name: Install dependencies
-        run: composer install --no-progress --no-interaction
-
-      # Step 4: Deploy via SSH
-      - name: Deploy to Server
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: 41.150.34.16
-          username: root
-          key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCw5CRXe9ObqNAfrvLyXVb98WysjP2rZR/ul4vzg6bxlydBl/FhF99LYJBohmILLzb0xfrW3Dil7soKC1C98cZtiCkDiEsGLQR0ryyMhidksCp6cdpcsofEwMIE8bs8WqdEoP3Op73IeQhVLfZMtRNw08xJbPJfOY+ZVeT00BIaA+d04oZ3k7APQvrNg0tHMtGSlB3goim6fx5ONgnOqxCcggZwQyfgxssndOqz0MwMt7jXjKUyKaIcWINsdJIcoq6Rdf/+0HEIc6J1MpP9laOxC27c1ECfWA39/CCVPXMJlK91/Jcb+JRCmtqcjc5UtkD39l61gX8laDutffY6WksP5d2+CuE0DY/vccHX42WRtiWZnnD5R+aRwiemK2F1i7kVXelPtpDuaNdi1v4LeEyUBAz7FU99UJil0cE0pISmPJubNZTzOaTkITT6itv9ZCwsr65zJOyIKmmCZf1P/PgR2ANNTWpL1ZR4SA1bn627ifLgzsvWixN9Nf+o9G+vS1M= Nqobiles-Notebook
-
-          port: 22
-          # Run deployment commands on the remote host. Replace or extend the
-          # commands below with the actual deploy steps you need (git pull,
-          # composer install, service restart, etc.).
-          script: |
-            set -e
-            echo "Starting deploy on $(hostname)"
-            mkdir -p /var/www/html
-            # adjust ownership if needed (may fail on some hosts)
-            chown -R www-data:www-data /var/www/html || true
-            # place a marker file to verify deployment succeeded
-            echo "Deployed by GitHub Actions on $(date)" > /var/www/html/DEPLOYED_BY
-            ls -la /var/www/html
+      - name: Deploy to server
+        run: |
+          ssh -i ~/.ssh/id_rsa user@your.server.com "cd /var/www/app && git pull && npm run build"
+          
+      - name: Test SSH connection
+        run: ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no user@your.server.com "echo '✅ Connected!'"
