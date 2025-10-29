@@ -31,7 +31,7 @@ jobs:
         with:
           host: 41.150.34.16
           username: root
-          key: SHA256:bq+o47x/IPw0wZM+Q6QgcQflmBN8mOpatnlH3u3EARQ
+          key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCw5CRXe9ObqNAfrvLyXVb98WysjP2rZR/ul4vzg6bxlydBl/FhF99LYJBohmILLzb0xfrW3Dil7soKC1C98cZtiCkDiEsGLQR0ryyMhidksCp6cdpcsofEwMIE8bs8WqdEoP3Op73IeQhVLfZMtRNw08xJbPJfOY+ZVeT00BIaA+d04oZ3k7APQvrNg0tHMtGSlB3goim6fx5ONgnOqxCcggZwQyfgxssndOqz0MwMt7jXjKUyKaIcWINsdJIcoq6Rdf/+0HEIc6J1MpP9laOxC27c1ECfWA39/CCVPXMJlK91/Jcb+JRCmtqcjc5UtkD39l61gX8laDutffY6WksP5d2+CuE0DY/vccHX42WRtiWZnnD5R+aRwiemK2F1i7kVXelPtpDuaNdi1v4LeEyUBAz7FU99UJil0cE0pISmPJubNZTzOaTkITT6itv9ZCwsr65zJOyIKmmCZf1P/PgR2ANNTWpL1ZR4SA1bn627ifLgzsvWixN9Nf+o9G+vS1M= Nqobiles-Notebook
           port: 22
           # Run deployment commands on the remote host. Replace or extend the
           # commands below with the actual deploy steps you need (git pull,
